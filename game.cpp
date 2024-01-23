@@ -33,44 +33,66 @@ void OcultarCursor(){
 	
 }
 
-//UNA CLASE ES LA DEFINICION DE OBJETOS OSEA DEFINIR LO QUE ES UNA CASA UN BARCO ETC, DENTRO DE ESTA CLASE PODEMOS DEFINIRLOS TRIBUTOS Y LOS METODOSQUE SON LAS FORMAS EN QUE ACTUAN EN CIERTA CIRCUNSTANCIA
-//UN EJEMPLO ES UNA PELOTA NOSOTROS DEFINIMOS QUE TENEMOS UNA PELOTA CON COORDENADAS QUE SERIAN LOS ATRIBUTOS Y SUS METODOS SERIAN QUE SE VE AFECTADA POR LA GRABEDAD Y LA FUERZA DE IMPULSO 
+//AHORA VAMOS A CREAR LOS LIMITES O LOS MARCOS DE NUESTRO VIDEOJUEGO PARA ELLO USAREMOS LA FUNCION VOID Y LE DAREMOS EL NOMBRE DE "pintar_limites"
 
-//PARA DEFINIR NUESTRO OBJETO "NAVE" AREMOS LO SIGUIENTE...
-//COLOCAREMOS NUESTRA CLASE "CLASS" PARA DEFINIR NUESTRO OBJETO LLAMADO "NAVE"
-
-class NAVE{
+void pintar_limites(){
 	
-	//AHORA DAREMOS LOS ATRIBUTOS QUE SON NUESTRAS COORDENADAS
-	//los datos dentro de este int son de caracter "privados" llamados asi por que no se les podra hacer uso fuera de nuestra estructura de codigo "clase"
-	int x,y;
-	//sin embargo se puede hacer publico o accecible un tipo de dato de nuestra clase que sera la siguiente y de la siguiente porma colocando la estructura "public" y todo lo que este dentro del mismo sera accecible fuera de la estructura de cogido
-public:
-	//ahora necesitamos un constructor que es el que nos pintara o hara visible nuestra nave a este se le da el mismo nombre que le damos a la clase en este caso sera "NAVE"
-	NAVE(int _x, int _y);
-	void pintar();
-	void borrar();
-	void mover();
+	//PARA NO TENER QUE HACERLO UNO POR UNO VAMOS A HACER UsO DEl FOR PARA QUE SE PINTE TODOS LOS MARCOS DE UNA SOLA VES
+	//COMENZAREMOS CON LOS MARCOS DE ARRIBA Y ABAJO ASI COMO LOS LATERALES
 	
-};
-
-//AHORA CREAMOS NUESTRO CONSTRUCTOR PARA ESTO HAY DOS FORMAS POEMOS USAR CUALQUIERA DE LAS DOS AMBAS FUNCIONAN IGUAL SOLO UNA ES MAS ESTETICA A LA VISTA DEL DESARROLLADOR Y OTRA UN POCO MENOS
-//esta es la opcion 1
-
-//NAVE::NAVE(int _x, int _y): x(_x),y(_Y){}
-
-//esta es la opcion 2 para el constructor
-//esta parte se puede colocar en esta parte del codigo o dentro de la clase en la parte publica
-NAVE::NAVE(int _x, int _y){
+	for(int i = 2 ; i < 78 ; i++){
+		
+		gotoxy(i,3);
+			printf("%c",205);
+		
+		gotoxy(i,33);
+			printf("%c",205);
+		
+	}
 	
-	x = _x;
-	y = _y;
+	for(int i = 4 ; i < 33 ; i++){
+		
+		gotoxy(2,i);
+			printf("%c",186);
+		
+		gotoxy(77,i);
+			printf("%c",186);
+			
+	}
+	
+	//AHORA PINTAREMOS LOS BORDES O LA ESQUINAS
+	
+	gotoxy(2,3);
+		printf("%c",201);
+	gotoxy(2,33);
+		printf("%c",200);
+	gotoxy(77,3);
+		printf("%c",187);
+	gotoxy(77,33);
+		printf("%c",188);
 	
 }
 
-//AHORA VAMOS A DEFINIR LAS FUNCIONES PARA ESTO SE HACE USO DEL VOID Y DE NUESTRA CLASE SEGUIDO DE NUESTRA FUNCION AREMOS LO MISMO PARA CADA FUNCION COMO PODEMOS OBSERVAR
+class NAVE{
+	
+	int x,y;
+	//para nuestra barra de salud vamos a tener que agregar otra variable la llamaremos "corazones"
+	int corazones;
+	
+public:
+	
+	//como podras notar nosotros hemos movido de lugar al constructor ahora dentro de nuestra clase en la seccion publica
+	//ahi agregaremos los siguientes parametros "int _corazones" y "corazones(_corazones)"
+	NAVE(int _x, int _y, int _corazones): x(_x),y(_y),corazones(_corazones){}
+	void pintar();
+	void borrar();
+	void mover();
+	//ahora aremos nuestra barra de salud con una funcion que se llamara "pintar_corazones"
+	void pintar_corazones();
+};
+
 void NAVE::pintar(){
-	//ahora para imprimirlo aremos uso de nuestro gotoxy y de la funcion printf asi como de el coddigo ascii
+	
 	gotoxy(x,y);   printf("  %c",30);
 	gotoxy(x,y+1); printf(" %c%c%c",40,207,41);
 	gotoxy(x,y+2); printf("%c%c %c%c",30,190,190,30);
@@ -85,8 +107,6 @@ void NAVE::borrar(){
 	
 }
 
-//para esta parte vamos a cambiar la funcion de movimiento de nuestras flechas a esta parte y reemplaaremos la funcion de gotoxy de borrar y de impirmir el asterisco poor nuestras nuevas funciones para borrar y pintar
-
 void NAVE::mover(){
 	
 	if(kbhit()){
@@ -94,36 +114,53 @@ void NAVE::mover(){
 		char tecla = getch();
 		
 			borrar(); 
-			
-				if(tecla == IZQUIERDA) x--;
-				if(tecla == DERECHA) x++;
-				if(tecla == ARRIBA) y--;
-				if(tecla == ABAJO) y++;
-			
+				
+				//AHORA AREMOS LOS LIMITES DE NUESTRO ESCENARIO PARA ELLO LE INDICAREMOS A NUESTRA FUNCION DE MOVER NE LA PARTE DE LOS IF LO SIGUIENTE
+				//AREMOS QUE NUESTRA NAVE SE PUEDA MOVER SIEMPRE Y CUANDO SE PRECIONE LA TECLA QUE YA SELECCIONAMOS Y CON UN "&&"
+				//Y POSTERIOR A ELLO INDICAREMOS QUE SOLO SI LA COORDENADA X ES MAYOR QUE 3 "X>3"
+				if(tecla == IZQUIERDA && x>3) x--;
+				if(tecla == DERECHA && x+6<77) x++;
+				if(tecla == ARRIBA && y>4) y--;
+				if(tecla == ABAJO && y+3<33) y++;
+				//ahora agregamos un if que nos servira para despues crear la interaccion de perdida de vida
+				if(tecla == 'e')corazones--;
 			pintar();
+			
+			//de forma rapida colocaremos la funcion de pintar corazones en esta parte de aqui de la siguiente manera
+			pintar_corazones();
 	}
 	
+}
+
+//ahora crearemos una funcion para pintar nuestros corazones de nueva cuenta usando un void con nuestra clase nave y nuestro parametro pintar_corazones
+//usando el gotoxy imprimiremos la palabra salud y luego de un espacio colocaremos un for para que ahora si imprimamos nuestros corazones 
+
+void NAVE::pintar_corazones(){
+	
+	gotoxy(64,2);   printf("Salud");
+	gotoxy(70,2);   printf("      ");
+	for(int i = 0 ; i < corazones; i++){
+		
+		gotoxy(70+i,2);   printf("%c",3);
+		
+	}
 }
 
 int main(){
 
 	OcultarCursor();
 	
-	//esta parte que teniamos anteriormente para imprimir el asterisco de nuestro juego ya no nos sirve por lo que se elimina
-	//int x = 10,y = 10;
-	//
-	//gotoxy(x,y);
-	//	printf("*");
+	//AQUI AGREGAREMOS NUESTRA NUEVA FUNCION "pintar_limites" PARA QUE NUESTRO PROGRAMA LOS MUESTRE EN NUESTRA PANTALLA
+	pintar_limites();
 	
-	//AHORA LLAMAREMOS A NUESTRA NAVE U OBJETO PARA INICIALIZARLA EN NUESTRO MAIN
-	NAVE N(7,7);
-	//HACEMOS USO DE LA FUNCION PINTAR PARA QUE NUESTRA NAVE APARESCA COLOCANDO N.pintar() 
+	NAVE N(7,7,3);
 	N.pintar();
+	//aqui agregamos nuestra funcion pintar corazones de igual forma para qu se muestre en pantalla una ves inicie el juego
+	N.pintar_corazones();
 	
 	bool game_over = false;
 	while(!game_over){
 		
-		//AHORA PARA PODER MOVER NUESTRA NAVE COMO MOVIMOS DE LUGAR LAS FUNCIONES DE MOVER VAMOS A SOLO LLAMAR A LA FUNCION MOVER DE LA SIGUIENTE FORMA
 		N.mover();
 				
 		Sleep(30);	
